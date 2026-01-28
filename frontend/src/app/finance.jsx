@@ -1,5 +1,5 @@
 import { AppSidebar } from "@/components/app-sidebar"
-import { UsersRound } from "lucide-react"
+import { UsersRound, CircleUserRound} from "lucide-react"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,19 +18,28 @@ export default function Finance() {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-          <SidebarTrigger className="-ml-1" />
-          <Separator
-            orientation="vertical"
-            className="mr-2 data-[orientation=vertical]:h-4"
-          />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbPage>Finance</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+        <header className="flex h-16 shrink-0 items-center justify-between gap-2 border-b pl-4 pr-10">
+          <div className="flex h-16 shrink-0 items-center gap-2 border-b">
+            <SidebarTrigger className="-ml-1" />
+            <Separator
+              orientation="vertical"
+              className="mr-2 data-[orientation=vertical]:h-4"
+            />
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem >
+                  <BreadcrumbPage className="font-medium">Finance</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+          <div className="flex justify-between items-center p-1 rounded-lg hover:bg-muted px-3 cursor-pointer gap-2">
+           <CircleUserRound size={32} />
+            <div className="flex flex-col">
+              <h1 className="text-sm font-medium">John Gabriel Completo</h1>
+              <span className="text-xs text-neutral-700">President of BASC</span>
+            </div>
+          </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4">
           {/* <div className="w-full h-auto flex items-center justify-center gap-6">
