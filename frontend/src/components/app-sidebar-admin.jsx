@@ -1,5 +1,5 @@
 import * as React from "react"
-import { LogOut, LayoutDashboard, GraduationCap, BookText, Landmark, PencilRuler, ChartNoAxesCombined} from "lucide-react"
+import { LogOut, LayoutDashboard, UsersRound, Logs} from "lucide-react"
 import { VersionSwitcher } from "@/components/version-switcher"
 import { useLocation, Link } from "react-router-dom"
 
@@ -21,33 +21,18 @@ const data = {
       items: [
         {
           title: "Dashboard",
-          url: "/dashboard",
+          url: "/admin-dashboard",
           icon : <LayoutDashboard />
         },
         {
-          title: "Academics",
-          url: "/academics",
-          icon: <GraduationCap />
+          title: "Users",
+          url: "/users",
+          icon: <UsersRound />
         },
         {
-          title: "RET",
-          url: "/ret",
-          icon: <BookText />
-        },
-        {
-          title: "Finance",
-          url: "/finance",
-          icon: <Landmark />
-        },
-        {
-          title: "Planning",
-          url: "/planning",
-          icon: <PencilRuler />
-        },
-        {
-          title: "Reports",
-          url: "/reports",
-          icon: <ChartNoAxesCombined />
+          title: "User Activities",
+          url: "/user-activities",
+          icon: <Logs />
         },
       ],
     },
