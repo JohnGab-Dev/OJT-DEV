@@ -1,6 +1,7 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import { useLocation } from "react-router-dom"
 import { UsersRound } from "lucide-react"
+import { Card } from "flowbite-react"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -34,32 +35,46 @@ export default function Dashboard() {
           </Breadcrumb>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4">
-          <div className="w-full h-auto flex items-center justify-center gap-6">
-            <div className="w-1/3 rounded-xl border flex flex-col p-5 gap-2 shadow-sm shadow-green-600">
-                 <h1 className="text-neutral-800 flex justify-between">Students <UsersRound /></h1>
-                 <h1 className="text-5xl">100</h1>
+          <div className="w-full h-auto p-6 flex flex-col gap-2 shadow-lg rounded-xl bg-gradient-to-r from-green-400 to-green-600 text-white">
+            <h1 className="text-2xl font-semibold"> Welcome back, President</h1>
+            <span className="text-sm ">Here's what's happening with your university today.</span>
+          </div>
+          <div className="w-full h-auto flex items-center justify-center gap-5">
+            
+            <div className="w-1/3 rounded-xl flex p-5 shadow-md border ">
+                <div className="w-full flex flex-col gap-2">
+                  <h1 className="text-neutral-800 flex justify-between">Students </h1>
+                 <h1 className="text-2xl">100</h1>
                  <span className="text-xs text-neutral-600">Total Number of Students</span>
+                </div>
+                <div className="w-12 h-10 flex items-center justify-center rounded-full bg-green-200"><UsersRound /></div>
             </div>
 
-           <div className="w-1/3 rounded-xl border flex flex-col p-5 gap-2 shadow-sm shadow-green-600">
-                 <h1 className="text-neutral-800 flex justify-between">Students <UsersRound /></h1>
-                 <h1 className="text-5xl">100</h1>
+            <div className="w-1/3 rounded-xl flex p-5 shadow-md border ">
+                <div className="w-full flex flex-col gap-2">
+                  <h1 className="text-neutral-800 flex justify-between">Students </h1>
+                 <h1 className="text-2xl">100</h1>
                  <span className="text-xs text-neutral-600">Total Number of Students</span>
+                </div>
+                <div className="w-12 h-10 flex items-center justify-center rounded-full bg-red-200"><UsersRound /></div>
             </div>
-
-            <div className="w-1/3 rounded-xl border flex flex-col p-5 gap-2 shadow-sm shadow-green-600">
-                 <h1 className="text-neutral-800 flex justify-between">Students <UsersRound /></h1>
-                 <h1 className="text-5xl">100</h1>
+            <div className="w-1/3 rounded-xl flex p-5 shadow-md border ">
+                <div className="w-full flex flex-col gap-2">
+                  <h1 className="text-neutral-800 flex justify-between">Students </h1>
+                 <h1 className="text-2xl">100</h1>
                  <span className="text-xs text-neutral-600">Total Number of Students</span>
+                </div>
+                <div className="w-12 h-10 flex items-center justify-center rounded-full bg-yellow-200"><UsersRound /></div>
             </div>
           </div>
           <div className="w-full h-auto ">
-            <table className="w-full">
+            <h1 className="my-4 text-lg font-medium">Here are the list of all recent activities</h1>
+            <table className="w-full border">
                 <thead>
                     <tr>
-                        <th className="text-left py-3 border-b px-2">Student ID</th>
-                        <th className="text-left py-3 border-b px-2">Name</th>
-                        <th className="text-left py-3 border-b px-2">Year Level</th>
+                        <th className="text-left py-3 border-b-2 border-green-600 px-2">Student ID</th>
+                        <th className="text-left py-3 border-b-2 border-green-600 px-2">Name</th>
+                        <th className="text-left py-3 border-b-2 border-green-600 px-2">Year Level</th>
                     </tr>
                 </thead>
 
