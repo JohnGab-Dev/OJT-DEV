@@ -6,6 +6,7 @@ import Academics from './app/academics'
 import Planning from './app/planning'
 import Ret from './app/ret'
 import Finance from './app/finance'
+import Reports from './app/reports'
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 
 // Map routes to titles
@@ -38,6 +39,7 @@ function App() {
         <Route path="/planning" element={<Planning />} />
         <Route path="/ret" element={<Ret />} />
         <Route path="/finance" element={<Finance />} />
+        <Route path="/reports" element={<Reports />} />
       </Routes>
     </Router>
   )

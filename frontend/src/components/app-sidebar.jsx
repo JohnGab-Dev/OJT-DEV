@@ -1,5 +1,5 @@
 import * as React from "react"
-import { LogOut } from "lucide-react"
+import { LogOut, LayoutDashboard, GraduationCap, BookText, Landmark, PencilRuler, ChartNoAxesCombined} from "lucide-react"
 import { VersionSwitcher } from "@/components/version-switcher"
 import { useLocation, Link } from "react-router-dom"
 
@@ -22,22 +22,32 @@ const data = {
         {
           title: "Dashboard",
           url: "/dashboard",
+          icon : <LayoutDashboard />
         },
         {
           title: "Academics",
           url: "/academics",
+          icon: <GraduationCap />
         },
         {
           title: "RET",
           url: "/ret",
+          icon: <BookText />
         },
         {
           title: "Finance",
           url: "/finance",
+          icon: <Landmark />
         },
         {
           title: "Planning",
           url: "/planning",
+          icon: <PencilRuler />
+        },
+        {
+          title: "Reports",
+          url: "/reports",
+          icon: <ChartNoAxesCombined />
         },
       ],
     },
@@ -61,7 +71,7 @@ export function AppSidebar({
               {item.items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={item.isActive} className={location.pathname.startsWith(item.url) ? " bg-neutral-200 font-medium hover:bg-neutral-300" : ""}>
-                    <Link to={item.url}>{item.title}</Link>
+                    <Link to={item.url}>{item.icon}{item.title}</Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -69,7 +79,7 @@ export function AppSidebar({
         ))}
 
         <SidebarMenu className="mt-auto pb-2">
-          <SidebarMenuButton >
+          <SidebarMenuButton className="bg-gradient-to-r from-red-500 to-red-700 text-white hover:from-red-600 hover:to-red-800 cursor-pointer">
             <span className="flex items-center gap-2"><LogOut />Logout</span>
           </SidebarMenuButton>
         </SidebarMenu>
