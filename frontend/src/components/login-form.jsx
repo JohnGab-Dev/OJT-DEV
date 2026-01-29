@@ -14,11 +14,45 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { Link } from "react-router-dom"
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export function LoginForm({
   className,
   ...props
 }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const data = {email, password};
+  
+  const handleSubmit = async (e)=> {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, data);
+
+      if(res.status === 200){
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("role", res.data.role);
+        setSuccess("Login successful");
+        navigate("/dashboard");
+      }
+      
+    } catch (err) {
+      console.log(err);
+      setError(err.response?.data?.message || "Invalid Credentials");
+      setLoading(false);
+    };
+  }
+
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -36,10 +70,20 @@ export function LoginForm({
         </CardHeader>
         <CardContent>
           <form>
+            {error !== "" && (
+              <div className="mb-4 text-sm text-red-600">
+                {error}
+              </div>
+            )}
+            {success !== "" && (
+              <div className="mb-4 text-sm text-green-600">
+                {success}
+              </div>
+            )}
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="email">Email<span className="text-red-600">*</span></FieldLabel>
-                <Input id="email" type="email" placeholder="m@example.com" required />
+                <Input id="email" type="email" placeholder="m@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
               </Field>
               <Field>
                 <div className="flex items-center">
@@ -50,13 +94,15 @@ export function LoginForm({
                     Forgot your password?
                   </a> */}
                 </div>
-                <Input id="password" type="password" required />
+                <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
               </Field>
               <Field>
-                <Button type="submit">Login</Button>
-                {/* <FieldDescription className="text-center">
-                  Don&apos;t have an account? <a href="#">Sign up</a>
-                </FieldDescription> */}
+                <Button type="button" disabled={loading} onClick={handleSubmit}>
+                  {loading ? "Logging in..." : "Login"}
+                </Button>
+                <FieldDescription className="text-center">
+                  Don&apos;t have an account? <Link to="/signup">Sign up</Link>
+                </FieldDescription>
               </Field>
             </FieldGroup>
           </form>

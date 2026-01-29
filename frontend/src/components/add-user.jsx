@@ -5,7 +5,7 @@ const Add_user = ( {addOpenModal, setAddOpenModal} ) => {
      const [email, setEmail] = useState("");
   return (
     <div>
-      <Modal show={addOpenModal} size="md" onClick={() => setAddOpenModal(false)} popup>
+      <Modal show={addOpenModal} size="md" onMouseUp={() => setAddOpenModal(false)} popup>
         <ModalHeader />
             <ModalBody>
             <div className="space-y-6" onClick={(e) => e.stopPropagation()}>
