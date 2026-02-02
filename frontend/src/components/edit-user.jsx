@@ -5,10 +5,10 @@ const Edit_user = ( {EditOpenModal, setEditOpenModal} ) => {
      const [email, setEmail] = useState("");
   return (
     <div>
-      <Modal show={EditOpenModal} size="md" onClick={() => setEditOpenModal(false)} popup>
+      <Modal show={EditOpenModal} size="md" onMouseDown={() => setEditOpenModal(false)} popup>
         <ModalHeader />
             <ModalBody>
-            <div className="space-y-6" onClick={(e) => e.stopPropagation()}>
+            <div className="space-y-6" onMouseDown={(e) => e.stopPropagation()}>
                 <h3 className="text-xl font-medium text-gray-900 dark:text-white">Edit user account</h3>
                 <div>
                     <div className="mb-2 block">

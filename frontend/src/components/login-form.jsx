@@ -18,6 +18,8 @@ import { Link } from "react-router-dom"
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import toast from 'react-hot-toast';
+import { CircleCheck } from 'lucide-react'
 
 export function LoginForm({
   className,
@@ -38,16 +40,25 @@ export function LoginForm({
     try {
       const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, data);
 
-      if(res.status === 200){
+      if(res.status === 200){ 
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("role", res.data.role);
+        localStorage.setItem("name", res.data.name);
         setSuccess("Login successful");
-        navigate("/dashboard");
+        toast.success("Welcome to dashboard", {
+          duration: 4000,
+          position: 'top-right',
+        })
+        navigate("/admin-dashboard");
       }
       
     } catch (err) {
       console.log(err);
       setError(err.response?.data?.message || "Invalid Credentials");
+      toast.error("Invalid Credentials", {
+        duration: 4000,
+        position: 'top-right',
+      })
       setLoading(false);
     };
   }
@@ -69,7 +80,7 @@ export function LoginForm({
           
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit} autoComplete="off">
             {error !== "" && (
               <div className="mb-4 text-sm text-red-600">
                 {error}
@@ -94,10 +105,10 @@ export function LoginForm({
                     Forgot your password?
                   </a> */}
                 </div>
-                <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required/>
               </Field>
               <Field>
-                <Button type="button" disabled={loading} onClick={handleSubmit}>
+                <Button type="submit" disabled={loading}>
                   {loading ? "Logging in..." : "Login"}
                 </Button>
                 <FieldDescription className="text-center">

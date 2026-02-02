@@ -1,8 +1,10 @@
 import { AppSidebar } from "@/components/app-sidebar-admin"
-import { useLocation } from "react-router-dom"
 import { UsersRound, CircleUserRound } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from "flowbite-react";
-import { Card } from "flowbite-react"
+import { useState, useEffect } from "react"
+import api from "../../axios.jsx";
+
+// designs
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,11 +18,31 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 
+
 export default function Admin_Dashboard() {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const res = await api.get("/pdms/admin-dashboard");
+      setUsers(res.data.data);
+      console.log(res.status);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  const name = localStorage.getItem("name");
+  const role = localStorage.getItem("role");
   return (
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
+        
         <header className="flex h-16 shrink-0 items-center justify-between gap-2 border-b pl-4 pr-10">
           <div className="flex h-16 shrink-0 items-center gap-2 border-b">
             <SidebarTrigger className="-ml-1" />
@@ -39,8 +61,8 @@ export default function Admin_Dashboard() {
           <div className="flex justify-between items-center p-1 rounded-lg hover:bg-muted px-3 cursor-pointer gap-2">
            <CircleUserRound size={32} />
             <div className="flex flex-col">
-              <h1 className="text-sm font-medium">John Gabriel Completo</h1>
-              <span className="text-xs text-neutral-700">admin</span>
+              <h1 className="text-sm font-medium">{name}</h1>
+              <span className="text-xs text-neutral-700">{role}</span>
             </div>
           </div>
         </header>
@@ -81,48 +103,25 @@ export default function Admin_Dashboard() {
             <h1 className="my-4 text-lg font-medium">Here are the list of all recent activities</h1>
             <Table striped>
                 <TableHead>
-                <TableHeadCell>Email</TableHeadCell>
-                <TableHeadCell>Name</TableHeadCell>
-                <TableHeadCell>Role</TableHeadCell>
-                <TableHeadCell>Department</TableHeadCell>
+                  <TableRow>
+                    <TableHeadCell>Email</TableHeadCell>
+                    <TableHeadCell>Name</TableHeadCell>
+                    <TableHeadCell>Role</TableHeadCell>
+                    <TableHeadCell>Activity</TableHeadCell>
+                  </TableRow>
                 </TableHead>
                 <TableBody className="divide-y text-black">
-                <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                  {users.map((user) => (
+                <TableRow key={user.id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                     <TableCell >
-                        johngabrielcompleto.basc@gmail.ocm
+                        {user.email}
                     </TableCell>
-                    <TableCell>John Gabriel Completo</TableCell>
-                    <TableCell>President</TableCell>
+                    <TableCell>{user.name}</TableCell>
+                    <TableCell>{user.role}</TableCell>
                     <TableCell>VPAA</TableCell>
                 </TableRow>
+                  ))}
 
-                <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <TableCell >
-                        johngabrielcompleto.basc@gmail.ocm
-                    </TableCell>
-                    <TableCell>John Gabriel Completo</TableCell>
-                    <TableCell>President</TableCell>
-                    <TableCell>VPAA</TableCell>
-                </TableRow>
-
-                <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <TableCell >
-                        johngabrielcompleto.basc@gmail.ocm
-                    </TableCell>
-                    <TableCell>John Gabriel Completo</TableCell>
-                    <TableCell>President</TableCell>
-                    <TableCell>VPAA</TableCell>
-                </TableRow>
-
-                <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <TableCell >
-                        johngabrielcompleto.basc@gmail.ocm
-                    </TableCell>
-                    <TableCell>John Gabriel Completo</TableCell>
-                    <TableCell>President</TableCell>
-                    <TableCell>VPAA</TableCell>
-                </TableRow>
-                
                 </TableBody>
             </Table>
             

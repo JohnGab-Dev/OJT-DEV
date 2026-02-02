@@ -1,7 +1,9 @@
 import './App.css'
 import { useEffect } from "react"
 import { BrowserRouter as Router, Route, Routes, useLocation, Navigate } from 'react-router-dom';
-import ProtectedRoute from './protectedRoutes';
+import ProtectedRoute from './routeManagement/protectedRoutes';
+import AuthRoutes  from './routeManagement/authRoutes';
+import { Toaster } from 'react-hot-toast';
 
 //pages
 import Dashboard from './app/president/dashboard'
@@ -40,20 +42,28 @@ function App() {
   return (
     <Router>
       <PageTitle />
+      <Toaster />
       <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/login" element={<LoginPage />} />
-         <Route path="/signup" element={<SignupPage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/academics" element={<Academics />} />
-        <Route path="/planning" element={<Planning />} />
-        <Route path="/ret" element={<Ret />} />
-        <Route path="/finance" element={<Finance />} />
-        <Route path="/reports" element={<Reports />} />
-        <Route path="/admin-dashboard" element={<Admin_Dashboard />} />
-        <Route path="/users" element={<Users />} />
-        <Route path="/user-activities" element={<User_activities />} />
+        {/* authRoutes */}
+        <Route path="/" element={ <AuthRoutes ><LoginPage /></AuthRoutes>} />
+        <Route path="/login" element={<AuthRoutes><LoginPage /></AuthRoutes>} />
+         <Route path="/signup" element={<AuthRoutes><SignupPage /></AuthRoutes>} />
 
+          {/* superadminRoutes */}
+            <Route path="/admin-dashboard" element={<ProtectedRoute><Admin_Dashboard /></ProtectedRoute>} />
+            <Route path="/users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
+            <Route path="/user-activities" element={<ProtectedRoute><User_activities /></ProtectedRoute>} />
+
+          {/* adminRoutes */}
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/academics" element={<ProtectedRoute><Academics /></ProtectedRoute>} />
+            <Route path="/planning" element={<ProtectedRoute><Planning /></ProtectedRoute>} />
+            <Route path="/ret" element={<ProtectedRoute><Ret /></ProtectedRoute>} />
+            <Route path="/finance" element={<ProtectedRoute><Finance /></ProtectedRoute>} />
+            <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
+          {/* users */}
+        
+          {/* 404 Not Found Route */}
         <Route path='/not-found' element={<NotFound />} />
         <Route path='*' element={<Navigate to='/not-found' />} />
 

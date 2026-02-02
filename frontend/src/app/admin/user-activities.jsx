@@ -20,6 +20,9 @@ import {
 export default function User_activities() {
     const [currentPage, setCurrentPage] = useState(1);
     const onPageChange = (page) => setCurrentPage(page);
+
+    const name = localStorage.getItem("name");
+    const role = localStorage.getItem("role");
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -42,8 +45,8 @@ export default function User_activities() {
           <div className="flex justify-between items-center p-1 rounded-lg hover:bg-muted px-3 cursor-pointer gap-2">
            <CircleUserRound size={32} />
             <div className="flex flex-col">
-              <h1 className="text-sm font-medium">John Gabriel Completo</h1>
-              <span className="text-xs text-neutral-700">admin</span>
+              <h1 className="text-sm font-medium">{name}</h1>
+              <span className="text-xs text-neutral-700">{role}</span>
             </div>
           </div>
         </header>
