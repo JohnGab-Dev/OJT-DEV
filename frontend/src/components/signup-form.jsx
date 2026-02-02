@@ -28,6 +28,7 @@ import { Link } from "react-router-dom"
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"
+import toast from 'react-hot-toast';
 
 export function SignupForm({
   className,
@@ -63,13 +64,12 @@ export function SignupForm({
     }, 2000);
 
   } catch (err) {
-    console.error(err);
+    console.err(err);
     setError(err.response?.data?.message || "Something went wrong");
   } finally {
     setLoading(false);
   }
 }
-
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -127,9 +127,9 @@ export function SignupForm({
                     <Input id="confirm-password" type="password" required value={confirmPassword} onChange={(e)=>{setConfirmPassword(e.target.value)} }/>
                   </Field>
                 </Field>
-                {/* <FieldDescription>
+                <FieldDescription>
                   Must be at least 8 characters long.
-                </FieldDescription> */}
+                </FieldDescription>
               </Field>
               <Field>
                 <Button type="submit" disabled={loading}>

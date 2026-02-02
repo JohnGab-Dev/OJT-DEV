@@ -2,6 +2,7 @@ import * as React from "react"
 import { LogOut, LayoutDashboard, GraduationCap, BookText, Landmark, PencilRuler, ChartNoAxesCombined} from "lucide-react"
 import { VersionSwitcher } from "@/components/version-switcher"
 import { useLocation, Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 import {
   Sidebar,
@@ -59,6 +60,13 @@ export function AppSidebar({
   ...props
 }){
   const location = useLocation();
+  const navigate = useNavigate();
+  const handleLogout = async (e) => {
+    e.preventDefault();
+     await localStorage.removeItem("token");
+     await localStorage.removeItem("role");
+     navigate("/");
+  }
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -78,11 +86,11 @@ export function AppSidebar({
             </SidebarMenu>
         ))}
 
-        <SidebarMenu className="mt-auto pb-2">
-          <SidebarMenuButton className="bg-gradient-to-r from-red-500 to-red-700 text-white hover:from-red-600 hover:to-red-800 cursor-pointer hover:text-white font-medium">
-            <span className="flex items-center gap-2"><LogOut />Logout</span>
-          </SidebarMenuButton>
-        </SidebarMenu>
+        <form onSubmit={handleLogout} className="mt-auto pb-2 w-full">
+          <button type="submit" className="bg-gradient-to-r from-red-500 to-red-700 text-white hover:from-red-600 hover:to-red-800 cursor-pointer hover:text-white font-medium w-full rounded-xl py-2 px-2">
+            <span className="flex items-center gap-2" ><LogOut />Logout</span>
+         </button>
+        </form>
       </SidebarContent>
       <SidebarRail />
 

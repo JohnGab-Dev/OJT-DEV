@@ -2,8 +2,11 @@ import { AppSidebar } from "@/components/app-sidebar-admin"
 import { useLocation } from "react-router-dom"
 import { CircleUserRound, EllipsisVertical, UserRoundPlus, Search } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from "flowbite-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dropdown, DropdownItem, Button, Pagination } from "flowbite-react"
+import api from '../../axios.jsx'
+
+// components
 import Add_user from "@/components/add-user";
 import DeleteComp from "@/components/delete"; 
 import Edit_user from "@/components/edit-user";  
@@ -27,6 +30,25 @@ export default function Users() {
     const [currentPage, setCurrentPage] = useState(1);
     const onPageChange = (page) => setCurrentPage(page);
 
+    const name = localStorage.getItem("name");
+    const role = localStorage.getItem("role");
+
+    const [users, setUsers] = useState([]);
+
+    useEffect(()=>{
+        fetchUsers();
+    }, []);
+
+    const fetchUsers = async ()=>{
+        try{
+            const res = await api.get('/PDMS/users');
+            setUsers(res.data.data);
+            console.log(res.status);
+        } catch(error){
+            console.error(error.response?.data?.message || error);
+        }
+    }
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -49,8 +71,8 @@ export default function Users() {
           <div className="flex justify-between items-center p-1 rounded-lg hover:bg-muted px-3 cursor-pointer gap-2">
            <CircleUserRound size={32} />
             <div className="flex flex-col">
-              <h1 className="text-sm font-medium">John Gabriel Completo</h1>
-              <span className="text-xs text-neutral-700">admin</span>
+              <h1 className="text-sm font-medium">{name}</h1>
+              <span className="text-xs text-neutral-700">{role}</span>
               
             </div>
           </div>
@@ -83,21 +105,24 @@ export default function Users() {
             
             <Table striped>
                 <TableHead>
-                <TableHeadCell>Email</TableHeadCell>
-                <TableHeadCell>Name</TableHeadCell>
-                <TableHeadCell>Role</TableHeadCell>
-                <TableHeadCell>Department</TableHeadCell>
-                <TableHeadCell>
-                    Actions 
-                </TableHeadCell>
+                  <TableRow>
+                    <TableHeadCell>Email</TableHeadCell>
+                    <TableHeadCell>Name</TableHeadCell>
+                    <TableHeadCell>Role</TableHeadCell>
+                    <TableHeadCell>Department</TableHeadCell>
+                    <TableHeadCell>
+                        Actions 
+                    </TableHeadCell>
+                  </TableRow>
                 </TableHead>
                 <TableBody className="divide-y">
-                    <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800 text-black">
+                    {users.map((user) => (
+                    <TableRow key={user.id} className="bg-white dark:border-gray-700 dark:bg-gray-800 text-black">
                         <TableCell className="">
-                            johngabrielcompleto.basc@gmail.com
+                            {user.email}
                         </TableCell>
-                        <TableCell>John Gabriel Completo</TableCell>
-                        <TableCell>President</TableCell>
+                        <TableCell>{user.name}</TableCell>
+                        <TableCell>{user.role}</TableCell>
                         <TableCell>VPAA</TableCell>
                         <TableCell>
                             <Dropdown
@@ -119,69 +144,9 @@ export default function Users() {
                                 <DeleteComp openModal={openModal} setOpenModal={setOpenModal} />
 
                         </TableCell>
-
-                        
                     </TableRow>
-                    <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800 text-black">
-                        <TableCell className="">
-                            johngabrielcompleto.basc@gmail.com
-                        </TableCell>
-                        <TableCell>John Gabriel Completo</TableCell>
-                        <TableCell>President</TableCell>
-                        <TableCell>VPAA</TableCell>
-                        <TableCell>
-                            <Dropdown
-                                    arrowIcon={false}
-                                    inline
-                                    dismissOnClick={false}
-                                    label={
-                                        <span className="p-2 rounded-lg hover:bg-neutral-200 cursor-pointer">
-                                        <EllipsisVertical className="w-5 h-5 text-gray-500 hover:text-gray-800" />
-                                        </span>
-                                    }
-                                    >
-                                    <DropdownItem onClick={() => setEditOpenModal(true)}>Edit</DropdownItem>
-                                    <DropdownItem className="text-red-600" onClick={() => setOpenModal(true)}>
-                                        Delete
-                                    </DropdownItem>
-                                </Dropdown>
-                                <Edit_user EditOpenModal={EditOpenModal} setEditOpenModal={setEditOpenModal} />
-                                <DeleteComp openModal={openModal} setOpenModal={setOpenModal} />
-
-                        </TableCell>
-
-                        
-                    </TableRow>
-                    <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800 text-black">
-                        <TableCell className="">
-                            johngabrielcompleto.basc@gmail.com
-                        </TableCell>
-                        <TableCell>John Gabriel Completo</TableCell>
-                        <TableCell>President</TableCell>
-                        <TableCell>VPAA</TableCell>
-                        <TableCell>
-                            <Dropdown
-                                    arrowIcon={false}
-                                    inline
-                                    dismissOnClick={false}
-                                    label={
-                                        <span className="p-2 rounded-lg hover:bg-neutral-200 cursor-pointer">
-                                        <EllipsisVertical className="w-5 h-5 text-gray-500 hover:text-gray-800" />
-                                        </span>
-                                    }
-                                    >
-                                    <DropdownItem onClick={() => setEditOpenModal(true)}>Edit</DropdownItem>
-                                    <DropdownItem className="text-red-600" onClick={() => setOpenModal(true)}>
-                                        Delete
-                                    </DropdownItem>
-                                </Dropdown>
-                                <Edit_user EditOpenModal={EditOpenModal} setEditOpenModal={setEditOpenModal} />
-                                <DeleteComp openModal={openModal} setOpenModal={setOpenModal} />
-
-                        </TableCell>
-
-                        
-                    </TableRow>
+                    ))}
+                    
                 </TableBody>
             </Table>
             <div className=" float-right ">

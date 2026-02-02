@@ -25,9 +25,9 @@ export const login = async (req, res) => {
             role: rows[0].role
         },
         process.env.JWT_SECRET,
-        { expiresIn: '6h' }
+        { expiresIn: '12h' }
     );  
-    return res.status(200).json({ token, role: rows[0].role, message: 'Login successful' });
+    return res.status(200).json({ token, role: rows[0].role, name: rows[0].name, message: 'Login successful' });
 }
 
 export const signup = async (req, res) => {
