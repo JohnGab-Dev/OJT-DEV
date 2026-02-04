@@ -47,7 +47,7 @@ function App() {
         {/* authRoutes */}
         <Route path="/" element={ <AuthRoutes ><LoginPage /></AuthRoutes>} />
         <Route path="/login" element={<AuthRoutes><LoginPage /></AuthRoutes>} />
-         <Route path="/signup" element={<AuthRoutes><SignupPage /></AuthRoutes>} />
+        <Route path="/signup" element={<AuthRoutes><SignupPage /></AuthRoutes>} />
 
           {/* superadminRoutes */}
             <Route path="/admin-dashboard" element={<ProtectedRoute><Admin_Dashboard /></ProtectedRoute>} />

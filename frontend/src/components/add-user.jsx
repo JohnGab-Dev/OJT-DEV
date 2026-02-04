@@ -3,7 +3,9 @@ import { Button, Label, Modal, ModalBody, ModalHeader, TextInput, Select } from 
 import { useState } from "react";
 import api from '../axios.jsx'
 import toast from 'react-hot-toast';
-const Add_user = ( {addOpenModal, setAddOpenModal} ) => {
+
+
+const Add_user = ( {addOpenModal, setAddOpenModal,  onUserAdded, page} ) => {
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
     const [role, setRole] = useState("");
@@ -14,20 +16,21 @@ const Add_user = ( {addOpenModal, setAddOpenModal} ) => {
     
     const handleSubmit = async (e) => {
         e.preventDefault()
-        
         try{
             const res = await api.post('/PDMS/users/add', data);
             if(res.status === 201){
-                toast.success("User created successfully", {
-                    duration: 4000, 
-                    position: 'top-right'
+                toast.success(res.data.message, {
+                    position: "top-right",
+                    className: "text-sm"
                 });
+                setAddOpenModal(false);
+                onUserAdded(page);
             }
         } catch (error){
-            setError(error.response?.data?.message)
-            toast.error("User add failed", {
+            setError(error.response?.data?.message || "User add failed")
+            toast.error(error.response?.data?.message || "User add failed", {
                 position: "top-right",
-                duration: 4000
+                className: "text-sm"
             })
             console.error(error.response?.data?.message || "User add failed")
         }
@@ -58,30 +61,18 @@ const Add_user = ( {addOpenModal, setAddOpenModal} ) => {
                 </div>
                 <div>
                     <div className="mb-2 block">
-                        <Label htmlFor="email">Name</Label>
+                        <Label htmlFor="name">Name</Label>
                     </div> 
                     <TextInput
-                        id="email"
+                        id="name"
                         placeholder=""
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         required
                     />
                 </div>
-                {/* <div className="max-w-md">
-                    <div className="mb-2 block">
-                        <Label htmlFor="countries">Select department</Label>
-                    </div>
-                    <Select id="countries" required>
-                        <option>President</option>
-                        <option>Academics</option>
-                        <option>RET</option>
-                        <option>Finance</option>
-                        <option value="">Planning</option>
-                    </Select>
-                </div> */}
 
-                <div className="max-w-md">
+                <div>
                     <div className="mb-2 block">
                         <Label htmlFor="countries">Select role</Label>
                     </div>
