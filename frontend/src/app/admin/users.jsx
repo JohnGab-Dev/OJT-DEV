@@ -24,30 +24,60 @@ import {
 } from "@/components/ui/sidebar"
 
 export default function Users() {
+    // modals
     const [openModal, setOpenModal] = useState(false);
     const [addOpenModal, setAddOpenModal] = useState(false);
     const [EditOpenModal, setEditOpenModal] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1);
-    const onPageChange = (page) => setCurrentPage(page);
-
+    const [selectedId, setSelectedId] = useState(null);
+    // user
     const name = localStorage.getItem("name");
     const role = localStorage.getItem("role");
 
+    //filter
+    const [search, setSearch] = useState("");
+
+    // pagination
+    const [count, setCount] = useState(0);
+    const totalPages = Math.max(1, Math.ceil((Number(count) || 0) / 10));
+    const [currentPage, setCurrentPage] = useState(1);
+    const onPageChange = (page) => setCurrentPage(page);
     const [users, setUsers] = useState([]);
+    const [user, setSelectedUser] = useState([]);
 
-    useEffect(()=>{
-        fetchUsers();
-    }, []);
-
-    const fetchUsers = async ()=>{
+    const fetchUsers = async (page=1, search)=>{
+      if(search && search != ""){
         try{
-            const res = await api.get('/PDMS/users');
+          const res = await api.get(`/PDMS/users/search?search=${encodeURIComponent(search)}`);
+          if(res.status === 200){
             setUsers(res.data.data);
+          }
+        }catch(error){
+          console.error(error.response?.data?.message || error);
+        }
+      }else{
+        try{
+            const res = await api.get(`/PDMS/users?page=${page}`);
+            setUsers(res.data.data);
+            setCount(res.data.count);
             console.log(res.status);
         } catch(error){
             console.error(error.response?.data?.message || error);
         }
+      }
+      
+        
     }
+
+    const handleSearch = (e)=> {
+      e.preventDefault()
+
+      fetchUsers(search)
+    }
+
+    useEffect(()=>{
+        fetchUsers(currentPage);
+    }, [currentPage]);
+
 
   return (
     <SidebarProvider>
@@ -63,7 +93,7 @@ export default function Users() {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem >
-                  <BreadcrumbPage className="font-medium">User Management</BreadcrumbPage>
+                  <BreadcrumbPage className="font-medium">User Management </BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -80,28 +110,34 @@ export default function Users() {
         <div className="flex flex-1 flex-col gap-4 p-4">
           <div className="w-full h-auto ">
             <div className="w-full flex items-center justify-between mt-2 mb-2">
-                <h1 className=" font-medium text-sm text-neutral-800 ">This lists includes all the user accounts</h1>
+                <h1 className=" font-medium text-sm text-neutral-800 ">This lists includes all the user accounts </h1>
                 
                 <div className="w-[60%] flex items-center gap-2">
-                    <div className="relative w-full max-w-sm">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <input
-                            type="text"
-                            placeholder="Search users..."
-                            className="
-                            w-full h-10 rounded-xl border border-neutral-200 bg-white
-                            py-2.5 pl-10 pr-4 text-sm
-                            focus:border-blue-500 focus:border-2
-                            outline-none transition
-                            "
-                            autoFocus
-                        />
-                    </div>
-                    <Button color="default" size="sm" className="bg-linear-to-r from-blue-500 to-blue-700 cursor-pointer hover:from-blue-600 hover:to-blue-800">Search</Button>
+                    <form onSubmit={handleSearch}>
+                      <div className="relative w-full max-w-sm">
+                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <input
+                              type="text"
+                              placeholder="Search users..."
+                              className="
+                              w-full h-10 rounded-xl border border-neutral-200 bg-white
+                              py-2.5 pl-10 pr-4 text-sm
+                              focus:border-blue-500 focus:border-2
+                              outline-none transition
+                              "
+                              value={search}
+                              onChange={(e)=> setSearch(e.target.value)}
+                              autoFocus
+                          />
+                      </div>
+                      <Button type="submit" color="default" size="sm" className="bg-linear-to-r from-blue-500 to-blue-700 cursor-pointer hover:from-blue-600 hover:to-blue-800">Search</Button>
+                    </form>
                     <Button size="xs" color="default" className="flex items-center gap-2 w-[7rem] bg-linear-to-r from-green-400 to-green-600 cursor-pointer hover:from-green-500 hover:to-green-700" onClick={() => setAddOpenModal(true)}><UserRoundPlus size={16}  />Add User</Button>
+                    
                 </div>
+                
             </div>
-            <Add_user addOpenModal={addOpenModal} setAddOpenModal={setAddOpenModal}/>
+            <Add_user addOpenModal={addOpenModal} setAddOpenModal={setAddOpenModal}  onUserAdded={fetchUsers} page={currentPage}/>
             
             <Table striped>
                 <TableHead>
@@ -109,7 +145,6 @@ export default function Users() {
                     <TableHeadCell>Email</TableHeadCell>
                     <TableHeadCell>Name</TableHeadCell>
                     <TableHeadCell>Role</TableHeadCell>
-                    <TableHeadCell>Department</TableHeadCell>
                     <TableHeadCell>
                         Actions 
                     </TableHeadCell>
@@ -123,7 +158,7 @@ export default function Users() {
                         </TableCell>
                         <TableCell>{user.name}</TableCell>
                         <TableCell>{user.role}</TableCell>
-                        <TableCell>VPAA</TableCell>
+                        
                         <TableCell>
                             <Dropdown
                                     arrowIcon={false}
@@ -135,22 +170,31 @@ export default function Users() {
                                         </span>
                                     }
                                     >
-                                    <DropdownItem onClick={() => setEditOpenModal(true)}>Edit</DropdownItem>
-                                    <DropdownItem className="text-red-600" onClick={() => setOpenModal(true)}>
-                                        Delete
+                                    <DropdownItem onClick={() => {
+                                      setEditOpenModal(true)
+                                      setSelectedUser(user)
+                                      }}>Edit</DropdownItem>
+                                    <DropdownItem className="text-red-600"  
+                                              onClick={() => {
+                                                setSelectedId(user.id); 
+                                                setOpenModal(true); 
+                                              }}>
+                                            Delete
                                     </DropdownItem>
                                 </Dropdown>
-                                <Edit_user EditOpenModal={EditOpenModal} setEditOpenModal={setEditOpenModal} />
-                                <DeleteComp openModal={openModal} setOpenModal={setOpenModal} />
-
                         </TableCell>
                     </TableRow>
                     ))}
+
+                    <Edit_user EditOpenModal={EditOpenModal} setEditOpenModal={setEditOpenModal} 
+                     id={selectedId} user={user} onUserUpdated={fetchUsers} page={currentPage}
+                    />
+                    <DeleteComp openModal={openModal} setOpenModal={setOpenModal} id={selectedId}  onUserAdded={fetchUsers} page={currentPage} />
                     
                 </TableBody>
             </Table>
             <div className=" float-right ">
-                <Pagination currentPage={currentPage} totalPages={2} onPageChange={onPageChange} showIcons />
+                <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} showIcons />
             </div>
           </div>
         </div>
